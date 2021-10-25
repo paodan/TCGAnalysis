@@ -1,0 +1,6 @@
+id	filename	md5	size	state
+6f1d55c9-b791-49a3-b664-db126f812872	8aa24565-3c27-4ed0-be70-6e571a609827.htseq.counts.gz	e38a59d098d9c5886b6ec3a056b7b90e	256909	released
+5bfc07b4-30df-44eb-a05f-f85a46cfa825	83053f28-d761-4d5a-acd6-855cb22e46e2.htseq.counts.gz	1f75d32ce8e3f7fa0d778c7c8f6682ed	257154	released
+21f2e1df-9797-4d33-ab48-34d4b53c25d8	890494a7-cfed-413e-97e9-2ccf0257d94a.htseq.counts.gz	c9d8bdb9efbe118f0d904a9e613798fd	244321	released
+a70be23a-19be-4565-b3ba-e2b916344174	e4de8f87-b9c8-4021-b29a-b7d128ff64a3.htseq.counts.gz	2dc346fa4154bb3dacdc74f0b51eca5a	257350	released
+b854dcef-2d6a-407c-8df2-4a01dcf612e1	7f39b57f-556b-46b2-a67a-af86345f900a.htseq.counts.gz	f3c3ea057af0dd90c2ca44552d71ccc8	254905	released

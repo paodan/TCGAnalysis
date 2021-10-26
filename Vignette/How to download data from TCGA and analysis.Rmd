@@ -1,0 +1,102 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+## Install gdc-client tool
+This gdc-client tool can be installed via following ways:
+
+(1) Using `installTools` function by giving the URL
+```{r Install, eval=FALSE}
+library(TCGAnalysis)
+# If the operating system is macOS, then the URL is
+URL = "https://gdc.cancer.gov/files/public/file/gdc-client_v1.6.1_OSX_x64.zip"
+# If the operating system is Ubuntu/CentOS, then the URL is
+URL = "https://gdc.cancer.gov/files/public/file/gdc-client_v1.6.1_Ubuntu_x64.zip"
+# If the operating system is Windows, then the URL is
+URL = "https://gdc.cancer.gov/files/public/file/gdc-client_v1.6.1_Windows_x64.zip"
+
+installTools(URL)
+```
+
+(2) Using `installTools` function by giving the gdc-client tool file (.zip) manually 
+downloaded from the GDC [website](https://gdc.cancer.gov/access-data/gdc-data-transfer-tool)
+```{r Install2, eval=FALSE}
+# installTools(manuallyDownloadFile = "~/Downloads/gdc-client_v1.6.1_Ubuntu_x64(1).zip")
+installTools(manuallyDownloadFile = "Path/To/The/gdc-client.zip")
+```
+
+(3) Download gdc-lient tool file (.zip) manually, then uncompressed the file into the following directory:
+
+```{r, echo=TRUE, eval = T}
+system.file("extdata", package = "TCGAnalysis")
+```
+
+## Obtain the manifest files from GDC repository
+
+(1) manifest for htseq.counts data
+
+(2) manifest for clincal data
+
+
+## Obtain the **htseq.counts** (NOT **clinical**) JSON data files
+
+On the right side of the GDC repository website -> click `JSON`
+
+## Download gene expression data by the manifest file of htseq.counts
+```{r, eval=FALSE}
+# manifestFile = system.file("extdata/gdc_manifest_LUAD_expr_5.txt", 
+#                            package = "TCGAnalysis")
+manifestFile = "~/Downloads/LUAD_expr_5/extdata/gdc_manifest_LUAD_expr_5.txt"
+folder_htseq_counts = "~/Downloads/LUAD_expr_5/htseq_counts"
+downloadByManifest(manifestFile, desDir = folder_htseq_counts)
+```
+
+## Download clinical data by manifest file
+```{r, eval=FALSE}
+# manifestFile = system.file("extdata/gdc_manifest_LUAD_clinical_all.txt", 
+#                            package = "TCGAnalysis")
+# manifestFile = ("~/Downloads/LUAD_expr_5/extdata/gdc_manifest_LUAD_clinical_all.txt")
+manifestFile = ("~/Downloads/LUAD_expr_5/extdata/gdc_manifest_LUAD_clinical_200.txt")
+folder_clinical = "~/Downloads/LUAD_expr_5/clinical"
+downloadByManifest(manifestFile, desDir = folder_clinical)
+```
+
+## Read htseq.counts data 
+```{r, eval=FALSE}
+cnt = readTCGA(folder_htseq_counts, dataType = "htseq.counts")
+head(cnt)
+```
+
+## Read clinical data
+```{r}
+cln = readTCGA(folder_clinical, dataType = "clinical")
+head(cln)
+
+```
+
+
+## Read htseq.counts JSON data
+```{r}
+cntJson = read_htseqCountsJSON("~/Downloads/LUAD_expr_5/extdata/gdc_htseq_counts_LUAD_all.json")
+head(cntJson)
+
+```
+# Match sample IDs and file IDs
+
+```{r}
+cntCln = matchExprClinical(cnt, cntJson, cln)
+
+
+```
+
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.

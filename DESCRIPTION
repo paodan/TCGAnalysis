@@ -1,16 +1,31 @@
 Package: TCGAnalysis
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Download data from TCGA and perform analysis
+Version: 0.99.1
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Weiyang",
+           family = "Tao",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+           email = "weiyangtao1513@gmail.com")
+Description: This TCGAnalysis package is to download gene expression and clinical data of 
+  patients from TCGA GDC repository. It is able to match the gene expression of 
+  the same patients with their clinical data. This package is continously updating 
+  till it can perform most analysis using the TCGA database.
+Depends: 
+    R (>= 4.0.0),
+    XML,
+    dplyr,
+    limma,
+    rjson,
+    data.table,
+    stringr,
+    DT
+License: `use_gpl3_license()`
 Encoding: UTF-8
+VignetteBuilder: knitr
+Suggests: 
+    rmarkdown,
+    knitr,
+    BiocManager
 LazyData: false
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2

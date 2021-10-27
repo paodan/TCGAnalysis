@@ -1,0 +1,165 @@
+---
+title: "How to download and analyze data from TCGA GDC repository"
+author: "Weiyang Tao"
+email: "weiyangtao1513@gmail.com"
+date: "`r Sys.Date()`"
+output: 
+  BiocStyle::html_document:
+    highlight: pygments
+    toc: true
+    fig_width: 5
+    number_sections: true
+    collapse: false
+abstract: >
+  This TCGAnalysis package is to download gene expression and clinical data of 
+  patients from TCGA GDC repository. It is able to match the gene expression of 
+  the same patients with their clinical data. This package is continously updating 
+  till it can perform most analysis using the TCGA database. I proposed to achieve
+  the following functionalities:
+    (1) Downloading different types of data including: gene expression, 
+    DNA methylation, whole exon sequencing, clinical information, etc.;
+    (2) Match the information using their common patient IDs;
+    (3) Survival analysis (to be achieved);
+    (4) Deconvolution analysis using gene expression data (to be achieved);
+    (5) and so on (to be achieved). 
+
+---
+```{css, echo=FALSE}
+body .main-container {
+  max-width: 1200px !important;
+  width: 1000px !important;
+  }
+  body {
+    max-width: 1000px !important;
+  }
+```
+```{r, setup, include=FALSE}
+options(width = 120)
+knitr::opts_chunk$set(comment = '', 
+                      fig.width = 6, 
+                      fig.height = 6, 
+                      collapse = TRUE, 
+                      comment = "#>", 
+                      tidy.opts=list(width.cutoff=100), 
+                      tidy=FALSE
+)
+```
+# Install the TCGAnalysis library
+
+```{r installPackage, eval=FALSE}
+install_github("paodan/TCGAnalysis")
+```
+
+# Load the library
+
+```{r library, message=FALSE, warning=FALSE}
+library(TCGAnalysis)
+```
+
+# Install gdc-client tool
+
+This gdc-client tool can be installed via following ways:
+
+## Using `installTools` function by giving the URL
+```{r Install, eval=FALSE}
+# If the operating system is macOS, then the URL is
+URL = "https://gdc.cancer.gov/files/public/file/gdc-client_v1.6.1_OSX_x64.zip"
+# If the operating system is Ubuntu/CentOS, then the URL is
+URL = "https://gdc.cancer.gov/files/public/file/gdc-client_v1.6.1_Ubuntu_x64.zip"
+# If the operating system is Windows, then the URL is
+URL = "https://gdc.cancer.gov/files/public/file/gdc-client_v1.6.1_Windows_x64.zip"
+
+installTools(URL)
+```
+
+## Using `installTools` function by giving the gdc-client tool file (.zip) manually 
+downloaded from the GDC [website](https://gdc.cancer.gov/access-data/gdc-data-transfer-tool)
+
+```{r Install2, eval=FALSE}
+# installTools(manuallyDownloadFile = "~/Downloads/gdc-client_v1.6.1_Ubuntu_x64.zip")
+installTools(manuallyDownloadFile = "Path/To/The/gdc-client.zip")
+```
+
+## Download gdc-lient tool file (.zip) manually, then uncompressed the file into the following directory:
+
+```{r, echo=TRUE, eval = TRUE}
+system.file("extdata", package = "TCGAnalysis")
+```
+
+# Obtain the manifest files from GDC repository
+
+## Manifest for htseq.counts data
+
+## Manifest for clincal data
+
+
+# Obtain the **htseq.counts** (NOT **clinical**) JSON data files
+
+On the right side of the GDC repository website -> click `JSON`
+
+# Download gene expression data by the manifest file of htseq.counts
+
+
+```{r setDownloadingFolder}
+folder_htseq_counts = "~/Downloads/LUAD_expr_5/htseq_counts"
+folder_clinical = "~/Downloads/LUAD_expr_5/clinical"
+```
+
+```{r downloadExpr, eval=FALSE}
+manifestFile = system.file("extdata/gdc_manifest_LUAD_htseq_counts_5.txt",
+                           package = "TCGAnalysis")
+downloadByManifest(manifestFile, desDir = folder_htseq_counts)
+```
+
+# Download clinical data by manifest file
+```{r downloadClinical, eval=FALSE}
+manifestFile = system.file("extdata/gdc_manifest_LUAD_clinical_50.txt",
+                           package = "TCGAnalysis")
+downloadByManifest(manifestFile, desDir = folder_clinical)
+```
+
+# Read htseq.counts data 
+```{r readExpr}
+cnt = readTCGA(folder_htseq_counts, dataType = "htseq.counts")
+DT::datatable(cnt, width = '100%', 
+              options = list(scrollX = TRUE, pageLength = 5))
+```
+
+# Read clinical data
+```{r readClinical}
+cln = readTCGA(folder_clinical, dataType = "clinical")
+DT::datatable(cln, width = '100%', 
+              options = list(scrollX = TRUE, pageLength = 2))
+
+```
+
+
+# Read htseq.counts JSON data
+```{r readJson}
+jsonFile = system.file("extdata/gdc_htseq_counts_LUAD_all.json", 
+                       package = "TCGAnalysis")
+cntJson = read_htseqCountsJSON(jsonFile)
+DT::datatable(cntJson, width = '100%', 
+              options = list(scrollX = TRUE, pageLength = 5))
+
+```
+
+# Match sample IDs and file IDs
+
+```{r showTable1}
+library(DT)
+cntCln = matchExprClinical(cnt, cntJson, cln)
+head(cntCln$expr, 5)
+cntCln$IDs
+```
+
+```{r showTable2}
+DT::datatable(cntCln$clinical, width = '100%', 
+              options = list(scrollX = TRUE, pageLength = 5))
+```
+
+# Session Info
+```{r sessionInfo}
+sessionInfo()
+```
+
